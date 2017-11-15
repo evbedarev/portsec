@@ -96,10 +96,13 @@ class Cisco(huawei):
         i_f = re.findall(r'(?im)^Gi(\d/0/\d{1,2})', data)
 
         if len(i_f) > 0:
+
             print('Найдены заблокированные интерфейсы: ')
             self.msg.append('Найдены заблокированные интерфейсы: ')
             print(i_f)
-            self.msg.append(i_f)
+            for i in i_f:
+                self.msg.append(i)
+
             return i_f
         else:
             return False
@@ -131,12 +134,17 @@ class Cisco(huawei):
     def unblock_port(self, conn):
         try:
             addr = self.portsec_addr(conn)
-            self.msg.append('мак адрес найден на интерфейсе:')
             print('мак адрес найден на интерфейсе:')
-            self.msg.append(addr)
             print(addr)
             if addr:
+
+                self.msg.append('мак адрес найден на интерфейсе:')
                 self.clear_port(addr, conn)
+
+                self.msg.append(addr)
+            else:
+                self.msg.append('мак адрес не найден на интерфейсе.')
+
             err_int = self.find_err_d(conn)
 
             if err_int:
