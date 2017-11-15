@@ -59,6 +59,8 @@ class huawei():
 
 
 class Cisco(huawei):
+    msg = []
+
     def exec_cmd(self, conn):
         conn.execute('show mac address-table | inc ' + self.mac)
         data = conn.response
@@ -95,7 +97,9 @@ class Cisco(huawei):
 
         if len(i_f) > 0:
             print('Найдены заблокированные интерфейсы: ')
+            self.msg.append('Найдены заблокированные интерфейсы: ')
             print(i_f)
+            self.msg.append(i_f)
             return i_f
         else:
             return False
@@ -127,7 +131,9 @@ class Cisco(huawei):
     def unblock_port(self, conn):
         try:
             addr = self.portsec_addr(conn)
+            self.msg.append('мак адрес найден на интерфейсе:')
             print('мак адрес найден на интерфейсе:')
+            self.msg.append(addr)
             print(addr)
             if addr:
                 self.clear_port(addr, conn)
@@ -139,11 +145,14 @@ class Cisco(huawei):
                     if macaddr:
                             if macaddr[0] == self.mac:
                                 print('Очистка интерфейса g' + mc + '  мак адрес: ' + macaddr[0])
+                                self.msg.append('Очистка интерфейса g' + mc + '  мак адрес: ' + macaddr[0])
                                 self.clear_port([mc], conn)
         except Exception:
             print('Error in unblock_port')
+            self.msg.append('Error in unblock_port')
         finally:
             self.close_conn(conn)
+            return self.msg
 
 
     def close_conn(self, conn):
@@ -164,7 +173,7 @@ passwd = 'Qq123456!'
 
 def clr_port(mac, ip_com, user, passwd):
     find = Cisco(ip_com, user, passwd, mac)
-    find.unblock_port(find.connect())
+    return find.unblock_port(find.connect())
 
 # def ZD(ip):
 #     for i in ip:
