@@ -4,11 +4,11 @@ import os
 def read_settings(par):
     list = []
     dir = os.path.abspath(os.curdir)
-    base_name = dir + r'\android.sqlite'
+    base_name = dir + r'/portsec_settings.sqlite'
     con = sqlite3.connect(base_name)
     cur = con.cursor()
     cur.execute(
-                "select {} from {} where name_par='{}'".format('value', 'par', par)
+                "select {} from {}".format(par, 'settings')
             )
     res = cur.fetchall()
     for i in res:
@@ -18,24 +18,19 @@ def read_settings(par):
     con.close()
     return(list)
 
-    # noinspection PyUnreachableCode
-
 
 def ins_to_db(par, val):
-    list = []
     dir = os.path.abspath(os.curdir)
-    base_name = dir + r'\android.sqlite'
+    base_name = dir + r'/portsec_settings.sqlite'
     con = sqlite3.connect(base_name)
     cur = con.cursor()
 
     cur.execute(
-         "delete from par where name_par='{}'".format(par)
+         "delete from settings"
     )
     con.commit()
-    for i in val:
-        print(i)
-        cur.execute(
-            "INSERT INTO 'main'.'par' ('name_par','value') VALUES ('{}','{}')".format(par, i)
+    cur.execute(
+            "INSERT INTO 'main'.'settings' ('ip_com','user') VALUES ('{}','{}')".format(par, val)
         )
     con.commit()
     cur.close()
