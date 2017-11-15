@@ -74,6 +74,7 @@ class Cisco(huawei):
             return('On switch ' + self.ip + ' nothing find')
 
     def clear_port(self, interface, conn):
+        '''Очистка порта'''
         for i in interface:
             conn.execute('clear port-security all interface G' + i)
             time.sleep(1)
@@ -132,6 +133,10 @@ class Cisco(huawei):
             return False
 
     def unblock_port(self, conn):
+        '''Основная функция
+        1. Смотрит мак адрес, если находит разблокирует
+        2. Смотрит заблокированные интерфейсы
+        3. В каждом интерфейсе ищет мак, если находит то разблокирует'''
         try:
             addr = self.portsec_addr(conn)
             print('мак адрес найден на интерфейсе:')
@@ -164,6 +169,7 @@ class Cisco(huawei):
 
 
     def close_conn(self, conn):
+        '''Функция соединения'''
         try:
             conn.close(True)
         except Exception:
