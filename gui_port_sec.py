@@ -32,10 +32,10 @@ class Application(Frame):
 
         self.pwd = Label(self, text='password')
         self.pwd.grid(row=8, column=0, columnspan=4, sticky=W)
-        self.pwd = Entry(self, width=55)
+        self.pwd = Entry(self, width=55, show="*")
         self.pwd.grid(row=9, column=0, columnspan=2, sticky=W)
 
-        self.text= Text(self, width=35, height=5, wrap=WORD)
+        self.text= Text(self, width=35, height=7, wrap=WORD)
         self.text.grid(row=10, column=0, columnspan=2, sticky=W)
         self.text.delete("0.0", END)
 
@@ -48,6 +48,9 @@ class Application(Frame):
 
     def clear_port(self):
         self.msg = []
+
+        self.text.delete("0.0", END)
+
         self.msg = Portsec.clr_port(self.mac.get(),
                          self.ip_com.get(),
                          self.login.get(),
