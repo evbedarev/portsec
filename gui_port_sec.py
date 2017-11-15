@@ -1,5 +1,6 @@
 from tkinter import *
 import Portsec
+from db_ import read_settings, ins_to_db
 
 
 class Application(Frame):
@@ -7,6 +8,7 @@ class Application(Frame):
 
     def __init__(self, master):
         super(Application, self).__init__(master)
+        self.readFile()
         self.grid(row=5, column=5)
         self.create_widgets()
 
@@ -20,30 +22,48 @@ class Application(Frame):
         self.ip_com.grid(row=4, column=0, columnspan=4, sticky=W)
         self.ip_com = Entry(self, width=55)
         self.ip_com.grid(row=5, column=0, columnspan=2, sticky=W)
+        self.ip_com.insert(0, self.ip)
 
         self.login = Label(self, text='login')
         self.login.grid(row=6, column=0, columnspan=4, sticky=W)
         self.login = Entry(self, width=55)
         self.login.grid(row=7, column=0, columnspan=2, sticky=W)
+        self.login.insert(0, self.user)
 
         self.pwd = Label(self, text='password')
         self.pwd.grid(row=8, column=0, columnspan=4, sticky=W)
         self.pwd = Entry(self, width=55)
         self.pwd.grid(row=9, column=0, columnspan=2, sticky=W)
 
-        self.ok_bttn = Button(self, text="Start", command= self.clear_port)
-        self.ok_bttn.grid(row=10, column=0, sticky=W)
+        self.text= Text(self, width=35, height=5, wrap=WORD)
+        self.text.grid(row=10, column=0, columnspan=2, sticky=W)
+        self.text.delete("0.0", END)
 
-        self.ok_bttn = Button(self, text="Save", command= '')
-        self.ok_bttn.grid(row=10, column=1, sticky=W)
+        self.ok_bttn = Button(self, text="Start", command= self.clear_port)
+        self.ok_bttn.grid(row=11, column=0, sticky=W)
+
+        self.ok_bttn = Button(self, text="Save", command= self.SaveToFile)
+        self.ok_bttn.grid(row=11, column=1, sticky=W)
 
 
     def clear_port(self):
-        Portsec.clr_port(self.mac.get(),
+        self.msg = []
+        self.msg = Portsec.clr_port(self.mac.get(),
                          self.ip_com.get(),
                          self.login.get(),
                          self.pwd.get())
 
+        for i in self.msg:
+            self.text.insert(str(self.msg.index(i)) + ".0", i + "\n")
+
+
+    def readFile(self):
+        self.ip = read_settings('ip_com')
+        self.user = read_settings('user')
+
+
+    def SaveToFile(self):
+        ins_to_db(self.ip_com.get().strip(), self.login.get().strip())
 
 root = Tk()
 root.title("Clear interface")
