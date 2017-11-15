@@ -172,12 +172,6 @@ class Cisco(huawei):
 
 
 
-###Cerd####
-mac = '477b.0535'
-user = 'sbt-bedarev-ev'
-passwd = 'Qq123456!'
-############################
-
 
 def clr_port(mac, ip_com, user, passwd):
     find = Cisco(ip_com, user, passwd, mac)
