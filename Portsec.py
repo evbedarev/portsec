@@ -4,6 +4,7 @@ import re, time
 
 
 class huawei():
+    msg = []
     ip = ''
     user = ''
     password = ''
@@ -57,9 +58,16 @@ class huawei():
         except Exception:
             print('error while close ssh connection')
 
+    def close_conn(self, conn):
+        '''Функция соединения'''
+        try:
+            conn.close(True)
+        except Exception:
+            print('error while close ssh connection')
+
+
 
 class Cisco(huawei):
-    msg = []
 
     def exec_cmd(self, conn):
         conn.execute('show mac address-table | inc ' + self.mac)
@@ -168,14 +176,6 @@ class Cisco(huawei):
             return self.msg
 
 
-    def close_conn(self, conn):
-        '''Функция соединения'''
-        try:
-            conn.close(True)
-        except Exception:
-            print('error while close ssh connection')
-
-
 
 
 
@@ -183,13 +183,18 @@ def clr_port(mac, ip_com, user, passwd):
     find = Cisco(ip_com, user, passwd, mac)
     return find.unblock_port(find.connect())
 
+
+
+
+
+
 # def ZD(ip):
 #     for i in ip:
 #         find = Cisco(i, user, passwd, mac)
 #         respons = find.exec_cmd()
 #         if 'nothing find' in respons:
 #             pass
-#         else:
+#         else:p
 #             print('On switch ' + i)
 #             print(respons)
 #             break
